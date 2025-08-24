@@ -24,3 +24,15 @@ Target: Top-20 SDI IBM × Hacktiv8.
 ## Struktur langkah (20x @5%)
 
 Lihat dokumen “Pre-Step Summary” & Checkpoint tiap langkah di repo/docs (atau folder `ai/` untuk log AI).
+
+## Development
+
+- `npm run dev` — jalankan dev server pada http://localhost:3000
+- `npm run lint` — cek kualitas kode
+- `npm run format` — format otomatis oleh Prettier
+
+## Tech stack (Frontend)
+
+- Next.js (App Router) + TypeScript
+- Tailwind CSS + shadcn/ui
+- ESLint (next/core-web-vitals + prettier)
