@@ -5,6 +5,7 @@
  */
 
 import { NextResponse } from 'next/server';
+
 import { createSupabaseAdmin } from '@/lib/supabase_admin'; // <- snake_case
 
 export async function GET() {
