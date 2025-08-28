@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx --cache --report-unused-disable-directives --max-warnings=0",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "rls:test": "tsx tools/rls/rls_sanity.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,9 +20,11 @@
     "@eslint/eslintrc": "^3.3.1",
     "@next/eslint-plugin-next": "^15.5.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^24.3.0",
     "@types/react": "^19.1.11",
     "@types/react-dom": "^19.1.7",
+    "dotenv": "^17.2.1",
     "eslint": "^9.34.0",
     "eslint-config-next": "^15.5.0",
     "eslint-config-prettier": "^10.1.8",
@@ -31,6 +34,7 @@
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.12",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "dependencies": {
