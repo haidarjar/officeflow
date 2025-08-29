@@ -50,10 +50,13 @@ async function main() {
   console.log('\n=== RLS Sanity Test Start ===\n');
 
   const admin = await login(ADMIN_EMAIL, ADMIN_PASS);
+  console.log('  role(admin) =', (await admin.supabase.rpc('get_my_role')).data);
   console.log('✓ Admin login');
   const head = await login(HEAD_EMAIL, HEAD_PASS);
+  console.log('  role(head)  =', (await head.supabase.rpc('get_my_role')).data);
   console.log('✓ Head login');
   const emp = await login(EMP_EMAIL, EMP_PASS);
+  console.log('  role(emp)   =', (await emp.supabase.rpc('get_my_role')).data);
   console.log('✓ Employee login');
 
   const engineering_id = await get_engineering_id(admin.supabase);
@@ -81,14 +84,29 @@ async function main() {
   if (approveErr) throw new Error('Head gagal approval: ' + approveErr.message);
   console.log('✓ Head approve ticket');
 
-  // Employee coba delete (harus ditolak)
-  const { error: empDeleteErr } = await emp.supabase
+  // Uji admin bisa update approvals langsung (tanpa trigger)
+  const { error: updApprovalErr } = await admin.supabase
+    .from('approvals')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('ticket_id', empTicket.id);
+
+  console.log('admin direct approvals update →', updApprovalErr?.message ?? 'OK');
+
+  // INGFO: Employee coba delete (harus ditolak)
+  // PostgREST bisa balas 204 tanpa error saat RLS block, jadi cek jumlah row terpengaruh. 🧪
+  const { data: empDelData, error: empDelErr } = await emp.supabase
     .from('tickets')
     .delete()
-    .eq('id', empTicket.id);
-  if (!empDeleteErr)
-    throw new Error('Employee seharusnya TIDAK boleh delete ticket (policy delete admin only).');
-  console.log('✓ Employee delete ditolak (expected) →', empDeleteErr.message);
+    .eq('id', empTicket.id)
+    .select('id'); // ← minta representasi row yang terhapus
+
+  if (empDelErr) {
+    console.log('✓ Employee delete ditolak (expected) →', empDelErr.message);
+  } else if (!empDelData || empDelData.length === 0) {
+    console.log('✓ Employee delete tidak mempengaruhi baris (expected: RLS block)');
+  } else {
+    throw new Error('Employee berhasil menghapus ticket (TIDAK BOLEH).');
+  }
 
   // Admin delete (soft)
   const { error: adminDeleteErr } = await admin.supabase
