@@ -1,6 +1,7 @@
 // INGFO: Load env dari .env.local untuk proses TSX (Node tidak otomatis). 🧪
-import * as dotenv from 'dotenv';
 import { resolve } from 'node:path';
+
+import * as dotenv from 'dotenv';
 dotenv.config({ path: resolve(process.cwd(), '.env.local') });
 
 // INGFO: RLS sanity tester — jalankan alur nyata (login → buat tiket → approve → soft delete). 🧪
